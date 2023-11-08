@@ -1,0 +1,1 @@
+include django_query_analyzer/templates/django_query_analyzer/*.html

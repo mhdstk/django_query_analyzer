@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Query Analyzer Data</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      h1 {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px;
+      }
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      li {
+        margin: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      li:hover {
+        background-color: #f0f0f0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Query Analyzer Data</h1>
+    <ul>
+      {% for query_analyzer in query_analyzers %}
+      <li>
+        <strong>Method:</strong> {{ query_analyzer.method }}<br />
+        <strong>Path:</strong> {{ query_analyzer.path }}<br />
+        <strong>Query Count:</strong> {{ query_analyzer.query_count }}<br />
+        <strong>Database Time:</strong> {{ query_analyzer.db_time }} ms<br />
+        <strong>Total Time:</strong> {{ query_analyzer.total_time }} s<br />
+        <strong>Created At:</strong> {{ query_analyzer.created_at }}<br />
+        <strong>Query List:</strong>
+        <ul>
+          {% for query in query_analyzer.query_list %}
+          <li>
+            <strong>SQL:</strong> {{ query.sql }}<br />
+            <strong>Time:</strong> {{ query.time }} ms<br />
+          </li>
+          {% endfor %}
+        </ul>
+      </li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
