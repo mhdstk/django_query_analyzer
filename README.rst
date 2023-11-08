@@ -5,7 +5,7 @@ Description here
 Detailed documentation is in the "docs" directory.
 Quick start
 -----------
-1. Add "polls" to your INSTALLED_APPS setting like this::
+1. Add "django_query_analyzer" to your INSTALLED_APPS setting like this::
 INSTALLED_APPS = [
         ...
         'django_query_analyzer',
