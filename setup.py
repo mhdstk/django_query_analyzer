@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="django_query_analyzer",
-    version="0.0.7",
+    version="0.0.8",
     description="Python package for query analysis and monitoring in Django",
     author="Muhammed Shaheen",
     author_email="muhammedshaheen.tkb@gmail.com",
