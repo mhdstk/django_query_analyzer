@@ -12,5 +12,5 @@ INSTALLED_APPS = [
     ]
 2. Include the polls URLconf in your project urls.py like this::
 path('', include('django_query_analyzer.urls')),
-3. Run `python manage.py migrate` to create the polls models.
+3. Run `python manage.py migrate` to create the django_query_analyzer models.
 4. Start the development server and visit http://127.0.0.1:8000/query-analyzer/
