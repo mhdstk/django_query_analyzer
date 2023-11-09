@@ -57,6 +57,16 @@ By default, the query analyzer stores the last 50 executed queries. If you want 
 MAX_QUERY_ANALYZER_RECORDS = 100
 ```
 
+### Logging to Terminal
+
+You can control logging to the terminal by adding the `ENABLE_LOGGING_TO_TERMINAL` setting to your project's `settings.py`. If set to `True`, query analysis details will be printed to the terminal. To disable terminal logging, set it to `False.
+
+Example configuration in settings.py:
+
+```python
+ENABLE_LOGGING_TO_TERMINAL = True
+```
+
 ## Excluded Paths
 
 By default, the query analyzer excludes URLs that start with `/admin/`, `/swagger/`, and `/docs/` from its analysis. More control over excluded paths may be available in future updates.
