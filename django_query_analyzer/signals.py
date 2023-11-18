@@ -6,9 +6,12 @@ from django.conf import settings
 
 @receiver(post_save, sender=QueryAnalyzer)
 def cleanup_query_analyzers(sender, instance, created, **kwargs):
-    max_records = getattr(settings, 'MAX_QUERY_ANALYZER_RECORDS', 50)
-    num_records = QueryAnalyzer.objects.count()
+    max_records = getattr(settings, "MAX_QUERY_ANALYZER_RECORDS", 50)
+    objects = QueryAnalyzer.objects.all().order_by("-id")
+    num_records = objects.count()
 
     if num_records >= max_records:
-        QueryAnalyzer.objects.filter(id__in=list(
-            QueryAnalyzer.objects.values_list('pk', flat=True)[:num_records - max_records])).delete()
+        point_to_remove = abs(max_records - num_records)
+        copy_of_objects = objects[:point_to_remove]
+        ids_to_delete = copy_of_objects.values_list("id", flat=True)
+        objects.filter(id__in=ids_to_delete).delete()
