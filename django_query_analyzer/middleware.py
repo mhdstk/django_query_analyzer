@@ -15,8 +15,8 @@ DOUBLE_LINE = "=" * 40
 
 
 class QueryAnalyzerMiddleware:
-
-    enable_console = getattr(settings, 'ENABLE_LOGGING_TO_TERMINAL', True)
+    enable_console = getattr(settings, "ENABLE_LOGGING_TO_TERMINAL", True)
+    PATHS_TO_EXCLUDE = getattr(settings, "PATHS_TO_EXCLUDE", list[str])
 
     def __init__(self, get_response):
         self.get_response = get_response
@@ -34,26 +34,14 @@ class QueryAnalyzerMiddleware:
         print(f"{DOUBLE_LINE}")
 
     def __call__(self, request):
-        # exclude admin urls
-        if request.path.startswith('/admin/'):
-            return self.get_response(request)
-        # exclude the path /query-analyzer/
-        if request.path.startswith('/query-analyzer/'):
-            return self.get_response(request)
-        #  exclude swagger urls
-        if request.path.startswith('/swagger/'):
-            return self.get_response(request)
-
-        if request.path.startswith('/docs/'):
-            return self.get_response(request)
-
-        if request.path.startswith('/redoc/'):
-            return self.get_response(request)
-
-        if request.path.startswith('/favicon.ico'):
-            return self.get_response(request)
-
-        if request.path.startswith('/static/'):
+        type_of_path_to_exclude = type(self.PATHS_TO_EXCLUDE)
+        if type_of_path_to_exclude is not list:
+            raise ValueError(
+                f"PATHS_TO_EXCLUDE expecting a list not {type_of_path_to_exclude.__name__}"
+            )
+        if any(
+            request.path.startswith(path) for path in self.PATHS_TO_EXCLUDE
+        ):
             return self.get_response(request)
 
         query_list = []
@@ -68,14 +56,16 @@ class QueryAnalyzerMiddleware:
         # Analyze and log database queries
         query_count = len(connection.queries)
         # print(connection.queries)
-        db_time = sum(float(query['time']) for query in connection.queries)
+        db_time = sum(float(query["time"]) for query in connection.queries)
 
         # Capture the executed queries
         for query in connection.queries:
-            query_list.append({
-                'sql': query['sql'],
-                'time': query['time'],
-            })
+            query_list.append(
+                {
+                    "sql": query["sql"],
+                    "time": query["time"],
+                }
+            )
 
         if self.enable_console:
             # Print on the terminal
@@ -88,7 +78,7 @@ class QueryAnalyzerMiddleware:
             query_count=query_count,
             db_time=db_time,
             total_time=total_time,
-            query_list=query_list
+            query_list=query_list,
         )
 
         return response
