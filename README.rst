@@ -69,4 +69,10 @@ ENABLE_LOGGING_TO_TERMINAL = True
 
 ## Excluded Paths
 
-By default, the query analyzer excludes URLs that start with `/admin/`, `/swagger/`, and `/docs/` from its analysis. More control over excluded paths may be available in future updates.
+You can configure excluded path by configuring the `PATHS_TO_EXCLUDE` on the `settings.py`.
+by adding the list of path prefixes, you can ignore the execution of query analyzer on the paths. By default query analyzer execute on every paths.
+
+Example configuration in settings.py:
+```python
+PATHS_TO_EXCLUDE = ['/admin/','/swagger/']
+```

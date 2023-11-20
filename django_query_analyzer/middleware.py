@@ -16,7 +16,7 @@ DOUBLE_LINE = "=" * 40
 
 class QueryAnalyzerMiddleware:
     enable_console = getattr(settings, "ENABLE_LOGGING_TO_TERMINAL", True)
-    PATHS_TO_EXCLUDE = getattr(settings, "PATHS_TO_EXCLUDE", [])
+    PATHS_TO_EXCLUDE = getattr(settings, "PATHS_TO_EXCLUDE", list[str])
 
     def __init__(self, get_response):
         self.get_response = get_response
