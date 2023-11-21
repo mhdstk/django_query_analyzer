@@ -21,7 +21,7 @@
       body {
         font-family: Arial, sans-serif;
       }
-      h1 {
+      .header {
         background-color: #007bff;
         color: #fff;
         padding: 10px;
@@ -42,61 +42,115 @@
     </style>
   </head>
   <body>
-    <h1>Query Analyzer Data</h1>
-    <ul>
-      {% for query_analyzer in query_analyzers %}
-      <li>
-        <strong>Method:</strong>
-        {% if query_analyzer.method == 'GET' %}
-        <span
-          class="border border-info rounded-pill bg-primary font-weight-bold"
-          ><span class="ml-3 mr-3">{{ query_analyzer.method }}</span></span
-        >
-        {% elif query_analyzer.method == 'POST' %}
-        <span
-          class="border border-success rounded-pill bg-success font-weight-bold"
-          ><span class="ml-3 mr-3">{{ query_analyzer.method }}</span></span
-        >
-        {% elif query_analyzer.method == 'PATCH' %}
-        <span
-          class="border border-primary rounded-pill bg-primary font-weight-bold"
-          ><span class="ml-3 mr-3">{{ query_analyzer.method }}</span></span
-        >
-        {% elif query_analyzer.method == 'DELETE' %}
-        <span
-          class="border border-danger rounded-pill bg-danger font-weight-bold"
-          ><span class="ml-3 mr-3">{{ query_analyzer.method }}</span></span
-        >
-        {% endif %}
-
-        <br />
-        <strong>Path:</strong> {{ query_analyzer.path }}<br />
-        <strong>Query Count:</strong> {{ query_analyzer.query_count }}<br />
-        <strong>Database Time:</strong> {{ query_analyzer.db_time }} ms<br />
-        <strong>Total Time:</strong> {{ query_analyzer.total_time }} s<br />
-        <strong>Created At:</strong> {{ query_analyzer.created_at }}<br />
-
-        <br />
-        <button
-          type="button"
-          class="btn btn-info"
-          onclick="toggleContent('{{query_analyzer.id}}')"
-        >
-          <strong>Query List</strong>
-        </button>
-        <div id="{{query_analyzer.id}}" class="content-box">
-          <ul>
-            {% for query in query_analyzer.query_list %}
-            <li>
-              <strong>SQL:</strong> {{ query.sql }}<br />
-              <strong>Time:</strong> {{ query.time }} ms<br />
-            </li>
-            {% endfor %}
-          </ul>
+    <div class="header">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col">
+            <div class="font-weight-bold display-4">Query Analyzer Data</div>
+          </div>
+          <div class="col">
+            <div>
+              <div class="dropdown float-right mr-3 mt-3">
+                <button
+                  class="btn btn-light dropdown-toggle"
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  style="
+                    width: 150px;
+                    text-align: left;
+                    font-weight: bold;
+                    font-size: large;
+                  "
+                >
+                  {{limit}}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="?limit=10">10</a>
+                  <a class="dropdown-item" href="?limit=20">20</a>
+                  <a class="dropdown-item" href="?limit=30">30</a>
+                  <a class="dropdown-item" href="?">all</a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </li>
-      {% endfor %}
-    </ul>
+      </div>
+    </div>
+
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Method</th>
+          <th scope="col">Path</th>
+          <th scope="col">Query Count</th>
+          <th scope="col">Query Time</th>
+          <th scope="col">Total Time</th>
+          <th scope="col">Created At</th>
+          <th scope="col">View</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for query_analyzer in query_analyzers %}
+        <tr>
+          <td>
+            {% if query_analyzer.method == 'GET' %}
+            <span
+              class="border border-info rounded-pill bg-primary font-weight-bold"
+              ><span class="ml-3 mr-3">{{ query_analyzer.method }}</span></span
+            >
+            {% elif query_analyzer.method == 'POST' %}
+            <span
+              class="border border-success rounded-pill bg-success font-weight-bold"
+              ><span class="ml-3 mr-3">{{ query_analyzer.method }}</span></span
+            >
+            {% elif query_analyzer.method == 'PATCH' %}
+            <span
+              class="border border-primary rounded-pill bg-primary font-weight-bold"
+              ><span class="ml-3 mr-3">{{ query_analyzer.method }}</span></span
+            >
+            {% elif query_analyzer.method == 'DELETE' %}
+            <span
+              class="border border-danger rounded-pill bg-danger font-weight-bold"
+              ><span class="ml-3 mr-3">{{ query_analyzer.method }}</span></span
+            >
+            {% endif %}
+          </td>
+          <td>{{ query_analyzer.path }}</td>
+          <td>{{ query_analyzer.query_count }}</td>
+          <td>{{ query_analyzer.db_time }} ms</td>
+          <td>{{ query_analyzer.total_time }} s</td>
+          <td>{{ query_analyzer.created_at }}</td>
+          <td>
+            <button
+              type="button"
+              class="btn btn-info"
+              onclick="toggleContent('{{query_analyzer.id}}')"
+            >
+              <strong>Query List</strong>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="7">
+            <div id="{{query_analyzer.id}}" class="content-box">
+              <ul>
+                {% for query in query_analyzer.query_list %}
+                <li>
+                  <strong>SQL:</strong> {{ query.sql }}<br />
+                  <strong>Time:</strong> {{ query.time }} ms<br />
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
     <script
       src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
       integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
