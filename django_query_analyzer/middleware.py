@@ -20,7 +20,8 @@ class QueryAnalyzerMiddleware:
         "/admin/",
         "/favicon.ico",
         "/static/",
-        "/media/"
+        "/media/",
+        "/query-analyzer/"
     ]
 
     def __init__(self, get_response):
