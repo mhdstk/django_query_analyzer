@@ -4,7 +4,14 @@ Django Query Analyzer is a Django app that allows you to monitor and analyze the
 
 ## Installation
 
-1. Add "django_query_analyzer" to your `INSTALLED_APPS` setting in your Django project's `settings.py`:
+1. Install the `django-query-analyzer` package using pip:
+
+   ```bash
+   pip install django-query-analyzer
+
+   ```
+
+2. Add "django_query_analyzer" to your `INSTALLED_APPS` setting in your Django project's `settings.py`:
 
    ```python
    INSTALLED_APPS = [
@@ -13,7 +20,7 @@ Django Query Analyzer is a Django app that allows you to monitor and analyze the
    ]
    ```
 
-2. Add "django_query_analyzer.middleware.QueryAnalyzerMiddleware" to your project's `MIDDLEWARE` list in `settings.py`:
+3. Add "django_query_analyzer.middleware.QueryAnalyzerMiddleware" to your project's `MIDDLEWARE` list in `settings.py`:
 
    ```python
    MIDDLEWARE = [
@@ -22,7 +29,7 @@ Django Query Analyzer is a Django app that allows you to monitor and analyze the
    ]
    ```
 
-3. Register the query analyzer URL patterns in your project's `urls.py`:
+4. Register the query analyzer URL patterns in your project's `urls.py`:
 
    ```python
    from django.urls import path, include
@@ -33,7 +40,7 @@ Django Query Analyzer is a Django app that allows you to monitor and analyze the
    ]
    ```
 
-4. Run the following command to create the necessary database tables for the "django_query_analyzer" package:
+5. Run the following command to create the necessary database tables for the "django_query_analyzer" package:
 
    ```bash
    python manage.py migrate
@@ -73,6 +80,7 @@ You can configure excluded path by configuring the `PATHS_TO_EXCLUDE` on the `se
 by adding the list of path prefixes, you can ignore the execution of query analyzer on the paths. By default query analyzer execute on every paths.
 
 Example configuration in settings.py:
+
 ```python
 PATHS_TO_EXCLUDE = ['/admin/','/swagger/']
 ```

@@ -1,4 +1,5 @@
 from django.shortcuts import render
+
 from .models import QueryAnalyzer
 
 def query_analyzer_list(request):
