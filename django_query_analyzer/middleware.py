@@ -16,10 +16,17 @@ DOUBLE_LINE = "=" * 40
 
 class QueryAnalyzerMiddleware:
     enable_console = getattr(settings, "ENABLE_LOGGING_TO_TERMINAL", True)
-    PATHS_TO_EXCLUDE = getattr(settings, "PATHS_TO_EXCLUDE", list[str])
+    DEFAULT_PATHS_TO_EXCLUDE = [
+        "/admin/",
+        "/favicon.ico",
+        "/static/",
+        "/media/"
+    ]
 
     def __init__(self, get_response):
         self.get_response = get_response
+        self.paths_to_exclude = getattr(settings, "PATHS_TO_EXCLUDE", [])
+        self.paths_to_exclude.extend(self.DEFAULT_PATHS_TO_EXCLUDE)
 
     def print_query(self, request, query_count, db_time, total_time):
         # Print a double line as a separator
@@ -34,14 +41,7 @@ class QueryAnalyzerMiddleware:
         print(f"{DOUBLE_LINE}")
 
     def __call__(self, request):
-        type_of_path_to_exclude = type(self.PATHS_TO_EXCLUDE)
-        if type_of_path_to_exclude is not list:
-            raise ValueError(
-                f"PATHS_TO_EXCLUDE expecting a list not {type_of_path_to_exclude.__name__}"
-            )
-        if any(
-            request.path.startswith(path) for path in self.PATHS_TO_EXCLUDE
-        ):
+        if any(request.path.startswith(path) for path in self.paths_to_exclude):
             return self.get_response(request)
 
         query_list = []
