@@ -1,6 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+
     <title>Query Analyzer Data</title>
     <style>
       body {
@@ -31,23 +46,80 @@
     <ul>
       {% for query_analyzer in query_analyzers %}
       <li>
-        <strong>Method:</strong> {{ query_analyzer.method }}<br />
+        <strong>Method:</strong>
+        {% if query_analyzer.method == 'GET' %}
+        <span
+          class="border border-info rounded-pill bg-primary font-weight-bold"
+          ><span class="ml-3 mr-3">{{ query_analyzer.method }}</span></span
+        >
+        {% elif query_analyzer.method == 'POST' %}
+        <span
+          class="border border-success rounded-pill bg-success font-weight-bold"
+          ><span class="ml-3 mr-3">{{ query_analyzer.method }}</span></span
+        >
+        {% elif query_analyzer.method == 'PATCH' %}
+        <span
+          class="border border-primary rounded-pill bg-primary font-weight-bold"
+          ><span class="ml-3 mr-3">{{ query_analyzer.method }}</span></span
+        >
+        {% elif query_analyzer.method == 'DELETE' %}
+        <span
+          class="border border-danger rounded-pill bg-danger font-weight-bold"
+          ><span class="ml-3 mr-3">{{ query_analyzer.method }}</span></span
+        >
+        {% endif %}
+
+        <br />
         <strong>Path:</strong> {{ query_analyzer.path }}<br />
         <strong>Query Count:</strong> {{ query_analyzer.query_count }}<br />
         <strong>Database Time:</strong> {{ query_analyzer.db_time }} ms<br />
         <strong>Total Time:</strong> {{ query_analyzer.total_time }} s<br />
         <strong>Created At:</strong> {{ query_analyzer.created_at }}<br />
-        <strong>Query List:</strong>
-        <ul>
-          {% for query in query_analyzer.query_list %}
-          <li>
-            <strong>SQL:</strong> {{ query.sql }}<br />
-            <strong>Time:</strong> {{ query.time }} ms<br />
-          </li>
-          {% endfor %}
-        </ul>
+
+        <br />
+        <button
+          type="button"
+          class="btn btn-info"
+          onclick="toggleContent('{{query_analyzer.id}}')"
+        >
+          <strong>Query List</strong>
+        </button>
+        <div id="{{query_analyzer.id}}" class="content-box">
+          <ul>
+            {% for query in query_analyzer.query_list %}
+            <li>
+              <strong>SQL:</strong> {{ query.sql }}<br />
+              <strong>Time:</strong> {{ query.time }} ms<br />
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
       </li>
       {% endfor %}
     </ul>
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+      integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      window.onload = function () {
+        $(".content-box").hide();
+      };
+      function toggleContent(contentId) {
+        // Show the selected content box
+        $("#" + contentId).toggle();
+      }
+    </script>
   </body>
 </html>
