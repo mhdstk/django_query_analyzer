@@ -10,7 +10,7 @@ with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
 
 setup(
     name="django_query_analyzer",
-    version="0.0.15",
+    version="0.0.16",
     description="Python package for query analysis and monitoring in Django",
     long_description_content_type="text/markdown",
     long_description=long_description,
