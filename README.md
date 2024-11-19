@@ -40,11 +40,6 @@ Django Query Analyzer is a Django app that allows you to monitor and analyze the
    ]
    ```
 
-5. Run the following command to create the necessary database tables for the "django_query_analyzer" package:
-
-   ```bash
-   python manage.py migrate
-   ```
 
 ## Usage
 
@@ -74,6 +69,11 @@ Example configuration in settings.py:
 ENABLE_LOGGING_TO_TERMINAL = True
 ```
 
+You can control the SQL query to  logging  the terminal   by adding `ENABLE_QUERY_LOGGING_ON_CONSOLE` to the settings 
+
+```python
+ENABLE_QUERY_LOGGING_ON_CONSOLE = True
+```
 ## Excluded Paths
 
 You can configure excluded path by configuring the `PATHS_TO_EXCLUDE` on the `settings.py`.

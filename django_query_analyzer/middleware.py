@@ -16,6 +16,9 @@ DOUBLE_LINE = "=" * 40
 
 class QueryAnalyzerMiddleware:
     enable_console = getattr(settings, "ENABLE_LOGGING_TO_TERMINAL", True)
+    enable_query_on_console = getattr(
+        settings, "ENABLE_QUERY_LOGGING_ON_CONSOLE", True
+    )
     DEFAULT_PATHS_TO_EXCLUDE = [
         "/admin/",
         "/favicon.ico",
@@ -62,6 +65,11 @@ class QueryAnalyzerMiddleware:
         db_time = sum(float(query["time"]) for query in connection.queries)
 
         for query in connection.queries:
+            if self.enable_query_on_console:
+                print(DOUBLE_LINE)
+                print(query["sql"])
+                print(DOUBLE_LINE)
+
             query_list.append(
                 {
                     "sql": query["sql"],
