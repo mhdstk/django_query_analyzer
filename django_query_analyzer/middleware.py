@@ -2,9 +2,9 @@ import time
 
 from django.conf import settings
 from django.db import connection
+from django.core.cache import cache
 
-from .models import QueryAnalyzer
-
+# Constants
 # ANSI color escape codes
 GREEN = "\033[32m"
 CYAN = "\033[36m"
@@ -21,7 +21,7 @@ class QueryAnalyzerMiddleware:
         "/favicon.ico",
         "/static/",
         "/media/",
-        "/query-analyzer/"
+        # "/query-analyzer/",
     ]
 
     def __init__(self, get_response):
@@ -42,7 +42,9 @@ class QueryAnalyzerMiddleware:
         print(f"{DOUBLE_LINE}")
 
     def __call__(self, request):
-        if any(request.path.startswith(path) for path in self.paths_to_exclude):
+        if any(
+            request.path.startswith(path) for path in self.paths_to_exclude
+        ):
             return self.get_response(request)
 
         query_list = []
@@ -59,7 +61,6 @@ class QueryAnalyzerMiddleware:
         # print(connection.queries)
         db_time = sum(float(query["time"]) for query in connection.queries)
 
-        # Capture the executed queries
         for query in connection.queries:
             query_list.append(
                 {
@@ -72,14 +73,48 @@ class QueryAnalyzerMiddleware:
             # Print on the terminal
             self.print_query(request, query_count, db_time, total_time)
 
-        # Store the query analysis in the database
-        QueryAnalyzer.objects.create(
-            method=request.method,
-            path=request.path,
-            query_count=query_count,
-            db_time=db_time,
-            total_time=total_time,
-            query_list=query_list,
-        )
+        cache_key = "query_analyzer_cache"
+        cache_data = cache.get(cache_key)
+        max_records = getattr(settings, "MAX_QUERY_ANALYZER_RECORDS", 50)
+        if not cache_data:
+            cache_data = [
+                {
+                    "method": request.method,
+                    "path": request.path,
+                    "query_count": query_count,
+                    "db_time": db_time,
+                    "total_time": total_time,
+                    "timestamp": time.time(),
+                    "query_list": query_list,
+                },
+            ]
+        else:
+            if len(cache_data) < max_records:
+                cache_data.append(
+                    {
+                        "method": request.method,
+                        "path": request.path,
+                        "query_count": query_count,
+                        "db_time": db_time,
+                        "total_time": total_time,
+                        "timestamp": time.time(),
+                        "query_list": query_list,
+                    },
+                )
+            else:
+                cache_data.pop(0)
+                cache_data.append(
+                    {
+                        "method": request.method,
+                        "path": request.path,
+                        "query_count": query_count,
+                        "db_time": db_time,
+                        "total_time": total_time,
+                        "timestamp": time.time(),
+                        "query_list": query_list,
+                    },
+                )
+
+        cache.set(cache_key, cache_data)
 
         return response
