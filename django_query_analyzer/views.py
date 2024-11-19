@@ -1,12 +1,14 @@
 from django.shortcuts import render
+from django.core.cache import cache
 
-from .models import QueryAnalyzer
+
 
 def query_analyzer_list(request):
     limit = request.GET.get("limit", "All")
-
-    query_analyzers = QueryAnalyzer.objects.all().order_by("-created_at")
-
+    query_analyzers = cache.get("query_analyzer_cache")
+    query_analyzers = sorted(
+        query_analyzers, key=lambda x: x["timestamp"], reverse=True
+    )
     if limit.isdigit():
         query_analyzers = query_analyzers[: int(limit)]
     return render(
